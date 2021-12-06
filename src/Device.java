@@ -2,10 +2,12 @@ public class Device implements Runnable {
 
     String name;
     String type;
+    Semaphore semaphore;
 
-    public Device(String name, String type) {
+    public Device(String name, String type, Semaphore semaphore) {
         this.name = name;
         this.type = type;
+        this.semaphore = semaphore;
     }
 
     public String getName() {
@@ -38,6 +40,15 @@ public class Device implements Runnable {
 
     @Override
     public void run() {
+        semaphore.Wait();
+        connect();
+        performOnlineActivity();
+        try {
+            wait(2);
+        } catch (InterruptedException e) {
 
+        }
+        logout();
+        semaphore.Signal();
     }
 }
