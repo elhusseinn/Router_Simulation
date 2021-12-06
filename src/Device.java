@@ -1,3 +1,5 @@
+import java.util.concurrent.TimeUnit;
+
 public class Device implements Runnable {
 
     String name;
@@ -30,7 +32,7 @@ public class Device implements Runnable {
     }
 
     public void connect() {
-        System.out.println(this.name + "Connected");
+        System.out.println(this.name + " Connected");
     }
 
     public void logout() {
@@ -44,17 +46,16 @@ public class Device implements Runnable {
     @Override
     public void run() {
         semaphore.Wait();
-        router.occupyConnection(this);
-
+       // router.occupyConnection(this);
         connect();
         performOnlineActivity();
-       /* try {
-            wait(2);
+        try {
+            TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
 
-        }*/
+        }
         logout();
         semaphore.Signal();
-        router.releaseConnection(this);
+       // router.releaseConnection(this);
     }
 }

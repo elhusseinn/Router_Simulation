@@ -3,7 +3,6 @@ import java.util.Scanner;
 
 public class Network {
     public static void main(String[] args) {
-        boolean flag = true;
         int N, TC;
         ArrayList<Device>threads = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
