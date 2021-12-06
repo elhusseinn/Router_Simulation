@@ -14,14 +14,9 @@ public class Semaphore {
 
         while (counter <= 0);
         counter--;
-        try {
-                wait();
-            } catch (InterruptedException e) {
-            }
     }
 
     public synchronized void Signal() {
         counter++;
-        if (counter >= 0) notify();
     }
 }

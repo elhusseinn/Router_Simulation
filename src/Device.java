@@ -5,11 +5,13 @@ public class Device implements Runnable {
     Semaphore semaphore;
     Router router;
 
-    public Device(String name, String type, Semaphore semaphore) {
+    public Device(String name, String type, Semaphore semaphore, Router router) {
         this.name = name;
         this.type = type;
         this.semaphore = semaphore;
+        this.router = router;
     }
+    public Device(){};
 
     public String getName() {
         return name;
@@ -42,14 +44,17 @@ public class Device implements Runnable {
     @Override
     public void run() {
         semaphore.Wait();
+        router.occupyConnection(this);
+
         connect();
         performOnlineActivity();
-        try {
+       /* try {
             wait(2);
         } catch (InterruptedException e) {
 
-        }
+        }*/
         logout();
         semaphore.Signal();
+        router.releaseConnection(this);
     }
 }

@@ -7,6 +7,7 @@ public class Router{
         this.numOfConnections = n;
     }
     List<Device> connections=new ArrayList<>();
+
     public void setNumConnection(int n){
         numOfConnections = n;
     }
@@ -14,12 +15,7 @@ public class Router{
         return numOfConnections;
     }
 
-    public void occupyConnection(Device device){
-        connections.add(device);
-    }
-    public void releaseConnection(Device device){
-        connections.remove(device);
-
-    }
+    public void occupyConnection(Device device){connections.add(device);}
+    public void releaseConnection(Device device){connections.remove(device);}
 
 }
