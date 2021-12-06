@@ -1,18 +1,18 @@
 public class Semaphore {
 
-    protected int value = 0;
+    protected int counter = 0;
 
     protected Semaphore() {
-        value = 0;
+        counter = 0;
     }
 
     protected Semaphore(int initial) {
-        value = initial;
+        counter = initial;
     }
 
     public synchronized void Wait() {
-        value--;
-        if (value < 0)
+        counter--;
+        while (counter < 0)
             try {
                 wait();
             } catch (InterruptedException e) {
@@ -20,7 +20,7 @@ public class Semaphore {
     }
 
     public synchronized void Signal() {
-        value++;
-        if (value <= 0) notify();
+        counter++;
+        if (counter >= 0) notify();
     }
 }
