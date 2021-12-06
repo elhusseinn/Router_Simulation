@@ -11,9 +11,10 @@ public class Semaphore {
     }
 
     public synchronized void Wait() {
+
+        while (counter <= 0);
         counter--;
-        while (counter < 0)
-            try {
+        try {
                 wait();
             } catch (InterruptedException e) {
             }

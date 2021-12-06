@@ -3,6 +3,7 @@ public class Device implements Runnable {
     String name;
     String type;
     Semaphore semaphore;
+    Router router;
 
     public Device(String name, String type, Semaphore semaphore) {
         this.name = name;
