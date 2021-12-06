@@ -46,7 +46,7 @@ public class Device implements Runnable {
     @Override
     public void run() {
         semaphore.Wait();
-       // router.occupyConnection(this);
+        router.occupyConnection(this);
         connect();
         performOnlineActivity();
         try {
@@ -56,6 +56,6 @@ public class Device implements Runnable {
         }
         logout();
         semaphore.Signal();
-       // router.releaseConnection(this);
+        router.releaseConnection(this);
     }
 }
