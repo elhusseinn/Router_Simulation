@@ -1,14 +1,19 @@
+import java.util.concurrent.TimeUnit;
+
 public class Device implements Runnable {
 
     String name;
     String type;
     Semaphore semaphore;
+    Router router;
 
-    public Device(String name, String type, Semaphore semaphore) {
+    public Device(String name, String type, Semaphore semaphore, Router router) {
         this.name = name;
         this.type = type;
         this.semaphore = semaphore;
+        this.router = router;
     }
+    public Device(){};
 
     public String getName() {
         return name;
@@ -27,11 +32,11 @@ public class Device implements Runnable {
     }
 
     public void connect() {
-        System.out.println(this.name + "Connected");
+        System.out.println(this.name + " Login");
     }
 
     public void logout() {
-        System.out.println(this.name + " Disconnected");
+        System.out.println(this.name + " Logged out");
     }
 
     public void performOnlineActivity() {
@@ -40,15 +45,23 @@ public class Device implements Runnable {
 
     @Override
     public void run() {
+        if(semaphore.getCounter()<=0) {
+            System.out.println("(" + getName() + ")" + "(" + getType() + ")" + "arrived and waiting");
+        }
+        else{
+            System.out.println("(" + getName() + ")" + "(" + getType() + ")" + "arrived");
+        }
         semaphore.Wait();
+        router.occupyConnection(this);
         connect();
         performOnlineActivity();
         try {
-            wait(2);
+            TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
 
         }
         logout();
         semaphore.Signal();
+        router.releaseConnection(this);
     }
 }

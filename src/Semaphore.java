@@ -23,4 +23,8 @@ public class Semaphore {
         counter++;
         if (counter >= 0) notify();
     }
+    public int getCounter(){
+        return counter;
+    }
+
 }
