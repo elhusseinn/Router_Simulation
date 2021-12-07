@@ -32,11 +32,11 @@ public class Device implements Runnable {
     }
 
     public void connect() {
-        System.out.println(this.name + " Connected");
+        System.out.println(this.name + " Login");
     }
 
     public void logout() {
-        System.out.println(this.name + " Disconnected");
+        System.out.println(this.name + " Logged out");
     }
 
     public void performOnlineActivity() {
@@ -45,6 +45,12 @@ public class Device implements Runnable {
 
     @Override
     public void run() {
+        if(semaphore.getCounter()<=0) {
+            System.out.println("(" + getName() + ")" + "(" + getType() + ")" + "arrived and waiting");
+        }
+        else{
+            System.out.println("(" + getName() + ")" + "(" + getType() + ")" + "arrived");
+        }
         semaphore.Wait();
         router.occupyConnection(this);
         connect();
