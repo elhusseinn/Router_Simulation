@@ -1,4 +1,7 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
 
 public class Device implements Runnable {
 
@@ -6,62 +9,76 @@ public class Device implements Runnable {
     String type;
     Semaphore semaphore;
     Router router;
+    int connectionNumber;
 
-    public Device(String name, String type, Semaphore semaphore, Router router) {
+    public int getConnectionNumber() {
+        return connectionNumber;
+    }
+
+    public void setConnectionNumber(int connectionNumber) {
+        this.connectionNumber = connectionNumber;
+    }
+
+
+    public Device(String name, String type, Router router) throws IOException {
         this.name = name;
         this.type = type;
-        this.semaphore = semaphore;
+        this.semaphore = router.semaphore;
         this.router = router;
     }
-    public Device(){};
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void connect() throws IOException {
+        System.out.println("-Connection "+this.getConnectionNumber()+": "+this.getName() + " Login");
+
     }
 
-    public void connect() {
-        System.out.println(this.name + " Login");
+    public void logout() throws IOException {
+        System.out.println("-Connection "+this.getConnectionNumber()+": "+this.getName() + " Logged Out");
     }
 
-    public void logout() {
-        System.out.println(this.name + " Logged out");
-    }
-
-    public void performOnlineActivity() {
-        System.out.println(this.name + " performs online activity");
+    public void performOnlineActivity() throws IOException {
+        System.out.println("-Connection "+this.getConnectionNumber()+": "+this.getName() + " performs online activity");
     }
 
     @Override
     public void run() {
-        if(semaphore.getCounter()<=0) {
-            System.out.println("(" + getName() + ")" + "(" + getType() + ")" + "arrived and waiting");
-        }
-        else{
-            System.out.println("(" + getName() + ")" + "(" + getType() + ")" + "arrived");
-        }
-        semaphore.Wait();
-        router.occupyConnection(this);
-        connect();
-        performOnlineActivity();
+        //semaphore.outPut(router, this);
+        router.semaphore.Wait(this);
         try {
-            TimeUnit.SECONDS.sleep(2);
+            router.occupyConnection(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            performOnlineActivity();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Thread.sleep(0);
         } catch (InterruptedException e) {
 
         }
-        logout();
-        semaphore.Signal();
+        try {
+            logout();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        router.semaphore.Signal();
         router.releaseConnection(this);
     }
 }
